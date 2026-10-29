@@ -3,6 +3,4 @@
 window.YOGA_CONFIG = {
   supabaseUrl: "https://kssjqnahngtadadyqskg.supabase.co",
   supabasePublishableKey: "sb_publishable_FD0cdUDQejIRY39X_TgbqQ_fQAKz3xV"
-  
-
 };
