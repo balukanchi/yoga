@@ -1,21 +1,25 @@
 
-<script src="./config.js"></script>
-<script src="./script.js"></script>
-
-<p>Total Records: <span id="count">—</span></p>
-<p id="status" role="status">Loading...</p>
-
 <table id="students" aria-busy="true">
     <thead>
         <tr>
             <th>ID</th>
             <th>Created At</th>
             <th>Student Name</th>
+            <th>School Name</th>
+            <th>Organizer</th>
+            <th>Issue Date</th>
         </tr>
     </thead>
-    <tbody id="records"></tbody>
+    <tbody id="records">
+        <tr>
+            <td colspan="6">Loading...</td>
+        </tr>
+    </tbody>
 </table>
 
-<button id="retry" type="button" hidden>
-    Retry
-</button>
+<p>Total Records: <span id="count">—</span></p>
+<p id="status" role="status">Loading...</p>
+<button id="retry" type="button" hidden>Retry</button>
+
+<script src="./config.js"></script>
+<script src="./script.js"></script>
