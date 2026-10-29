@@ -62,11 +62,27 @@ function showError(error) {
 // Load student records from Supabase
 async function loadStudents() {
     if (!records || !count || !status || !retry || !table) {
-        console.error(
-            "Missing HTML elements. Required IDs: records, count, status, retry, students."
-        );
+        console.error("Missing required HTML elements:", {
+            records: !!records,
+            count: !!count,
+            status: !!status,
+            retry: !!retry,
+            students: !!table
+        });
+
+        if (status) {
+            status.textContent =
+                "Error: Check the HTML element IDs and script loading.";
+        }
+
+        if (records) {
+            showMessage("Required HTML elements are missing.");
+        }
+
         return;
     }
+
+    // Keep the rest of your existing loadStudents() function here.
 
     retry.hidden = true;
     table.setAttribute("aria-busy", "true");
