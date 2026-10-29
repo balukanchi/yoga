@@ -1,37 +1,105 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Student Yoga Details</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 30px; background: #f4f7fb; }
-    h1 { text-align: center; color: #234c72; font-size: 24px; }
-    .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; overflow-wrap: anywhere; }
-    th { background: #234c72; color: white; }
-    tr:nth-child(even) { background: #f2f6fa; }
-    .empty { text-align: center; padding: 20px; }
-    button { padding: 8px 16px; margin-bottom: 15px; cursor: pointer; }
-    @media (max-width: 600px) { body { margin: 12px; } .container { padding: 12px; } }
-  </style>
-  <script src="./config.js" defer></script>
-  <script src="./app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoga Student Records</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #222;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #176b45;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #status {
+            margin-top: 12px;
+        }
+
+        #retry {
+            padding: 8px 18px;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-  <main class="container">
-    <h1>Student Yoga Details</h1>
-    <p>Total Records: <strong id="count">—</strong></p>
-    <p id="status" role="status" aria-live="polite">Loading student records…</p>
-    <button id="retry" type="button" hidden>Try again</button>
-    <div class="table-wrap">
-      <table aria-label="Student yoga records" aria-busy="true" id="students">
-        <thead><tr><th scope="col">ID</th><th scope="col">Created Date</th><th scope="col">Student Name</th></tr></thead>
-        <tbody id="records"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody>
-      </table>
+
+    <h1>Yoga Student Records</h1>
+
+    <h3>
+        Total Records: <span id="count">—</span>
+    </h3>
+
+    <p id="status" role="status" aria-live="polite">
+        Loading student records...
+    </p>
+
+    <button id="retry" type="button" hidden>
+        Retry
+    </button>
+
+    <div class="table-container">
+        <table id="students" aria-busy="true">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Created At</th>
+                    <th>Student Name</th>
+                    <th>School Name</th>
+                    <th>Organizer</th>
+                    <th>Issue Date</th>
+                </tr>
+            </thead>
+
+            <tbody id="records">
+                <tr>
+                    <td colspan="6" class="empty">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-  </main>
+
+    <!-- Load configuration before the main script -->
+    <script src="./config.js"></script>
+    <script src="./script.js"></script>
+
 </body>
 </html>
