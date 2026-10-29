@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Yoga Details</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; background: #f4f7fb; }
+    h1 { text-align: center; color: #234c72; font-size: 24px; }
+    .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; overflow-wrap: anywhere; }
+    th { background: #234c72; color: white; }
+    tr:nth-child(even) { background: #f2f6fa; }
+    .empty { text-align: center; padding: 20px; }
+    button { padding: 8px 16px; margin-bottom: 15px; cursor: pointer; }
+    @media (max-width: 600px) { body { margin: 12px; } .container { padding: 12px; } }
+  </style>
+  <script src="./config.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <h1>Student Yoga Details</h1>
+    <p>Total Records: <strong id="count">—</strong></p>
+    <p id="status" role="status" aria-live="polite">Loading student records…</p>
+    <button id="retry" type="button" hidden>Try again</button>
+    <div class="table-wrap">
+      <table aria-label="Student yoga records" aria-busy="true" id="students">
+        <thead><tr><th scope="col">ID</th><th scope="col">Created Date</th><th scope="col">Student Name</th></tr></thead>
+        <tbody id="records"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
