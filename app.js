@@ -12,7 +12,7 @@ function showMessage(message) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
 
-    cell.colSpan = 3;
+    cell.colSpan = 6;
     cell.className = "empty";
     cell.textContent = message;
 
@@ -29,7 +29,7 @@ function showError(error) {
             "Request timed out. Please check your connection and retry.";
     } else if (error instanceof TypeError) {
         status.textContent =
-            "Unable to connect. Check the Console for network, CORS, or configuration errors.";
+            "Unable to connect. Check your internet connection, CORS, or Supabase configuration.";
     } else {
         status.textContent =
             error.message || "An unexpected error occurred.";
@@ -52,41 +52,48 @@ async function loadStudents() {
     const timer = setTimeout(() => controller.abort(), 20000);
 
     try {
-        // 1. Validate page elements
+        // Validate required HTML elements
         if (!records || !count || !status || !retry || !table) {
             throw new Error(
-                "Required HTML elements are missing. Check your page IDs."
+                "Required HTML elements are missing. Check your HTML element IDs."
             );
         }
 
-        // 2. Validate Supabase configuration
+        // Validate Supabase configuration
         const config = window.YOGA_CONFIG;
 
         if (!config) {
             throw new Error(
-                "YOGA_CONFIG is missing. Ensure config.js loads before script.js."
+                "YOGA_CONFIG is missing. Load config.js before script.js."
             );
         }
 
-        if (!config.supabaseUrl || !config.supabasePublishableKey) {
+        if (
+            !config.supabaseUrl ||
+            !config.supabasePublishableKey
+        ) {
             throw new Error(
                 "Supabase URL or publishable key is missing in config.js."
             );
         }
 
-        if (!config.supabasePublishableKey.startsWith("sb_publishable_")) {
+        if (
+            !config.supabasePublishableKey.startsWith("sb_publishable_")
+        ) {
             throw new Error(
-                "Invalid key format. Use your Supabase publishable key."
+                "Invalid key format. Use the Supabase publishable key."
             );
         }
 
-        // 3. Validate Supabase URL
+        // Validate Supabase URL
         let supabaseUrl;
 
         try {
             supabaseUrl = new URL(config.supabaseUrl);
         } catch {
-            throw new Error("Invalid Supabase project URL in config.js.");
+            throw new Error(
+                "Invalid Supabase URL. Check config.js."
+            );
         }
 
         if (
@@ -94,11 +101,11 @@ async function loadStudents() {
             !supabaseUrl.hostname.endsWith(".supabase.co")
         ) {
             throw new Error(
-                "Check the Supabase project URL. An HTTPS Supabase URL is required."
+                "The Supabase project URL must be a valid HTTPS Supabase URL."
             );
         }
 
-        // 4. Build REST API endpoint
+        // Build REST API endpoint
         const endpoint = new URL(
             "/rest/v1/student_yoga",
             supabaseUrl.origin
@@ -106,7 +113,7 @@ async function loadStudents() {
 
         endpoint.searchParams.set(
             "select",
-            "id,created_at,studentname"
+            "id,created_at,studentname,schoolname,organizer,issuedate"
         );
 
         endpoint.searchParams.set(
@@ -114,10 +121,9 @@ async function loadStudents() {
             "created_at.desc"
         );
 
-        console.info("Connecting to Supabase:", endpoint.origin);
-        console.info("Loading table: student_yoga");
+        console.info("Supabase endpoint:", endpoint.href);
 
-        // 5. Send API request
+        // Send request
         const response = await fetch(endpoint, {
             method: "GET",
             headers: {
@@ -127,9 +133,12 @@ async function loadStudents() {
             signal: controller.signal
         });
 
-        console.info("Supabase HTTP Status:", response.status);
+        console.info(
+            "Supabase HTTP Status:",
+            response.status
+        );
 
-        // 6. Handle HTTP errors
+        // Handle HTTP errors
         if (!response.ok) {
             let details = "";
 
@@ -148,25 +157,24 @@ async function loadStudents() {
 
             console.error("Supabase API Error:", {
                 status: response.status,
-                statusText: response.statusText,
                 details: details
             });
 
             if (response.status === 401) {
                 throw new Error(
-                    "HTTP 401: Authentication failed. Check your Supabase publishable key."
+                    "HTTP 401: Authentication failed. Verify your publishable key."
                 );
             }
 
             if (response.status === 403) {
                 throw new Error(
-                    "HTTP 403: Access denied. Check table permissions, grants, and RLS policies."
+                    "HTTP 403: Access denied. Check database grants and RLS policies."
                 );
             }
 
             if (response.status === 404) {
                 throw new Error(
-                    "HTTP 404: Table or API endpoint not found. Verify student_yoga and Data API settings."
+                    "HTTP 404: Check the student_yoga table and Supabase Data API settings."
                 );
             }
 
@@ -181,7 +189,7 @@ async function loadStudents() {
             );
         }
 
-        // 7. Parse JSON response
+        // Parse JSON response
         let students;
 
         try {
@@ -194,37 +202,57 @@ async function loadStudents() {
 
         if (!Array.isArray(students)) {
             throw new Error(
-                "Unexpected response format. Expected a list of student records."
+                "Unexpected response. Expected an array of student records."
             );
         }
 
-        // 8. Validate records
-        const invalidRecord = students.some(student =>
-            !student ||
-            typeof student !== "object" ||
-            Array.isArray(student)
-        );
-
-        if (invalidRecord) {
+        // Validate returned records
+        if (
+            students.some(student =>
+                !student ||
+                typeof student !== "object" ||
+                Array.isArray(student)
+            )
+        ) {
             throw new Error(
                 "The database returned an invalid student record."
             );
         }
 
-        // 9. Display records safely
+        // Create table rows safely
+        const fields = [
+            "id",
+            "created_at",
+            "studentname",
+            "schoolname",
+            "organizer",
+            "issuedate"
+        ];
+
         const rows = students.map(student => {
             const row = document.createElement("tr");
 
-            for (const field of [
-                "id",
-                "created_at",
-                "studentname"
-            ]) {
+            fields.forEach(field => {
                 const cell = document.createElement("td");
+                let value = student[field];
 
-                cell.textContent = String(student[field] ?? "");
+                // Format timestamps for easier reading
+                if (field === "created_at" && value) {
+                    const date = new Date(value);
+
+                    value = Number.isNaN(date.getTime())
+                        ? String(value)
+                        : date.toLocaleString("en-IN");
+                }
+
+                // Display empty values clearly
+                if (value === null || value === undefined || value === "") {
+                    value = "—";
+                }
+
+                cell.textContent = String(value);
                 row.appendChild(cell);
-            }
+            });
 
             return row;
         });
@@ -235,12 +263,12 @@ async function loadStudents() {
             showMessage("No records found.");
         }
 
-        // 10. Update record count and status
+        // Update total record count
         count.textContent = String(students.length);
 
-        status.textContent = students.length
+        status.textContent = students.length > 0
             ? "Student records loaded successfully."
-            : "Connection successful. No student records are available.";
+            : "Connected successfully. No student records are available.";
 
         console.info(
             `Successfully loaded ${students.length} student record(s).`
@@ -255,8 +283,8 @@ async function loadStudents() {
     }
 }
 
-// Retry button
+// Retry button event
 retry.addEventListener("click", loadStudents);
 
-// Load records when the page starts
+// Load records when the page opens
 loadStudents();
