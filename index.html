@@ -1,105 +1,17 @@
+<p>Total Records: <span id="count">—</span></p>
+<p id="status" role="status">Loading...</p>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoga Student Records</title>
+<table id="students" aria-busy="true">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Created At</th>
+            <th>Student Name</th>
+        </tr>
+    </thead>
+    <tbody id="records"></tbody>
+</table>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            color: #222;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        th {
-            background-color: #176b45;
-            color: white;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f5f5f5;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 20px;
-        }
-
-        #status {
-            margin-top: 12px;
-        }
-
-        #retry {
-            padding: 8px 18px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>Yoga Student Records</h1>
-
-    <h3>
-        Total Records: <span id="count">—</span>
-    </h3>
-
-    <p id="status" role="status" aria-live="polite">
-        Loading student records...
-    </p>
-
-    <button id="retry" type="button" hidden>
-        Retry
-    </button>
-
-    <div class="table-container">
-        <table id="students" aria-busy="true">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Created At</th>
-                    <th>Student Name</th>
-                    <th>School Name</th>
-                    <th>Organizer</th>
-                    <th>Issue Date</th>
-                </tr>
-            </thead>
-
-            <tbody id="records">
-                <tr>
-                    <td colspan="6" class="empty">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Load configuration before the main script -->
-    <script src="./config.js"></script>
-    <script src="./script.js"></script>
-
-</body>
-</html>
+<button id="retry" type="button" hidden>
+    Retry
+</button>
